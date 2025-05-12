@@ -1,0 +1,1 @@
+﻿setx Path "$env:Path;D:\aload"
