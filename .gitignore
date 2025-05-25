@@ -1,0 +1,5 @@
+# ignore the PowerShell directory
+/PowerShell-7.4.10-win*/
+
+# ignore the zip file (if it’s named like PowerShell-7.4.10-win64.zip)
+PowerShell-7.4.10-win*.zip
