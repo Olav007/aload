@@ -75,3 +75,34 @@ Write-Host
 Write-Host -ForegroundColor Cyan "================================================"
 Write-Host -ForegroundColor Cyan "Report Complete."
 Write-Host -ForegroundColor Cyan "================================================"
+
+
+
+# Set fallback to Scoop (default)
+$SCOOP = $env:SCOOP
+if (-not $SCOOP) {
+    $SCOOP = "D:\a\scoop"
+    Write-Output "INFO: SCOOP not set, defaulting to $SCOOP"
+}
+
+# Define fallback path (Scoop version - might be deep inside subfolders)
+$scoopFallbackVpn = Get-ChildItem -Path (Join-Path $SCOOP "apps\mullvadvpn-np\current") -Filter "Mullvad VPN.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName
+
+# Define preferred path (C-drive full install)
+$vpnPathCDrive = "C:\Program Files\Mullvad VPN\Mullvad VPN.exe"
+
+# Use C-drive if it exists, otherwise fallback
+if (Test-Path $vpnPathCDrive) {
+    Write-Output "✅ Found Mullvad VPN installed on C: drive"
+    $vpnPath = $vpnPathCDrive
+} elseif ($scoopFallbackVpn) {
+    Write-Output "🔄 Using Scoop version of Mullvad VPN"
+    $vpnPath = $scoopFallbackVpn
+} else {
+    Write-Output "❌ Mullvad VPN executable not found on system."
+    exit 1
+}
+
+# Just for testing:
+Write-Output "VPN path in use: $vpnPath"
+
